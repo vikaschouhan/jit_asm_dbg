@@ -1070,10 +1070,10 @@ struct Instr
 std::ostream& operator<<(std::ostream& ostr, Instr& i){
     ostr << std::hex << std::showbase;
 
-    ostr << i.GetName() << " " << "[opcode:" << std::setw(8) << i.opcode_
-         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] ";
+    ostr << "[opcode:" << std::setw(8) << i.opcode_
+         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << i.GetName() << " ";
 
-    if(!i.GetOpd(0).IsNone()) { ostr << i.GetOpd(0);        }
+    if(!i.GetOpd(0).IsNone()) { ostr << " " << i.GetOpd(0); }
     if(!i.GetOpd(1).IsNone()) { ostr << "," << i.GetOpd(1); }
     if(!i.GetOpd(2).IsNone()) { ostr << "," << i.GetOpd(2); }
     if(!i.GetOpd(3).IsNone()) { ostr << "," << i.GetOpd(3); }
