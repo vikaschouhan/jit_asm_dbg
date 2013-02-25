@@ -66,6 +66,7 @@
 #endif
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <deque>
 #include <vector>
@@ -251,11 +252,16 @@ struct RegID
 
 std::ostream& operator<<(std::ostream& ostr, RegID &rid){
     ostr << std::noshowbase << std::dec;
-    if(rid.GetType() == R_TYPE_GP){
+
+    if(rid.IsInvalid()){
+        return ostr;
+    }
+    if(rid.GetType() == R_TYPE_GP && rid.id < sizeof(GPRTypeStr)){
         ostr << GPRTypeStr[rid.id];
     }else{
         ostr << RegTypeStr[rid.type] << rid.id;
     }
+
     return ostr;
 }
 
@@ -366,13 +372,20 @@ namespace detail
 
     std::ostream& operator<<(std::ostream& ostr, Opd& opd){
         ostr << std::showbase << std::hex;
+
         if(opd.IsReg()){
-            ostr << "[Assignable=" << opd.reg_assignable_ << "]" << opd.reg_;
+            //ostr << "[Assignable=" << opd.reg_assignable_ << "]" << opd.reg_;
+            ostr << opd.reg_;
         }else if(opd.IsMem()){
-            ostr << "[" << opd.base_ << "+" << opd.index_ << "*" << opd.scale_ << "+" << opd.disp_ << "]";
+            ostr << "[";
+            if(!opd.base_.IsInvalid())   { ostr << opd.base_ << "+"; }
+            if(!opd.index_.IsInvalid())  { ostr << opd.index_ << "*" << opd.scale_ << "+"; }
+            ostr << opd.disp_;
+            ostr << "]";
         }else if(opd.IsImm()){
             ostr << opd.imm_;
         }
+
         ostr << std::noshowbase << std::dec;
         return ostr;
     }
@@ -1036,18 +1049,40 @@ struct Instr
 {
 	static const size_t MAX_OPERAND_COUNT = 6;
 
+    const char* name_;                      ///< Instr Name
 	InstrID	id_;							///< Instruction ID
 	uint32  opcode_;						///< Opcode
 	uint32  encoding_flag_;					///< EncodingFlags
 	detail::Opd	opd_[MAX_OPERAND_COUNT];	///< Operands
 
 	Instr(InstrID id, uint32 opcode, uint32 encoding_flag, const detail::Opd& opd1 = detail::Opd(), const detail::Opd& opd2 = detail::Opd(), const detail::Opd& opd3 = detail::Opd(), const detail::Opd& opd4 = detail::Opd(), const detail::Opd& opd5 = detail::Opd(), const detail::Opd& opd6 = detail::Opd())
-		: id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;}
+		: name_(""), id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;}
+
+    Instr(const char* name, InstrID id, uint32 opcode, uint32 encoding_flag, const detail::Opd& opd1 = detail::Opd(), const detail::Opd& opd2 = detail::Opd(), const detail::Opd& opd3 = detail::Opd(), const detail::Opd& opd4 = detail::Opd(), const detail::Opd& opd5 = detail::Opd(), const detail::Opd& opd6 = detail::Opd())
+		: name_(name), id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;} 
 
 	InstrID GetID() const {return id_;}
+    const char* GetName() const {return name_;}
 	const detail::Opd& GetOpd(size_t index) const {return opd_[index];}
 	detail::Opd& GetOpd(size_t index) {return opd_[index];}
 };
+
+std::ostream& operator<<(std::ostream& ostr, Instr& i){
+    ostr << std::hex << std::showbase;
+
+    ostr << i.GetName() << " " << "[opcode:" << std::setw(8) << i.opcode_
+         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] ";
+
+    if(!i.GetOpd(0).IsNone()) { ostr << i.GetOpd(0);        }
+    if(!i.GetOpd(1).IsNone()) { ostr << "," << i.GetOpd(1); }
+    if(!i.GetOpd(2).IsNone()) { ostr << "," << i.GetOpd(2); }
+    if(!i.GetOpd(3).IsNone()) { ostr << "," << i.GetOpd(3); }
+    if(!i.GetOpd(4).IsNone()) { ostr << "," << i.GetOpd(4); }
+    if(!i.GetOpd(5).IsNone()) { ostr << "," << i.GetOpd(5); }
+
+    ostr << std::dec << std::noshowbase;
+    return ostr;
+}
 
 /// Assembler backend
 struct Backend
@@ -1690,6 +1725,14 @@ struct Frontend
 
 	virtual void InternalMain() = 0;
 
+    void PrintInstrs(){
+        std::cout << "instrs size : " << instrs_.size() << std::endl;
+        InstrList::iterator iter = instrs_.begin();
+        for(; iter != instrs_.end(); iter++){
+            std::cout << *iter << std::endl;
+        }
+    }
+
 	/// Declare variable of the function argument on register
 	void DeclareRegArg(const detail::Opd& var, const detail::Opd& arg, const detail::Opd& spill_slot = detail::Opd())
 	{
@@ -1828,6 +1871,9 @@ struct Frontend
 
 		InternalMain();
 		compiler::Compile(*this);
+
+        // FIXME : Hack
+        PrintInstrs();
 
 		// Resolve jump instructions
 		if (!labels_.empty()) {
