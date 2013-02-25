@@ -65,7 +65,7 @@
 	#endif
 #endif
 
-
+#include <iostream>
 #include <string>
 #include <deque>
 #include <vector>
@@ -207,6 +207,14 @@ enum RegType
 	R_TYPE_SYMBOLIC_YMM		///< Symbolic YMM register
 };
 
+const char* RegTypeStr[] = { "gpr", "mmx", "xmm", "ymm", "fpu", "gpr_sym", "mmx_sym", "xmm_sym", "ymm_sym" };
+#if defined JITASM64
+const char* GPRTypeStr[] = { "rax", "rcx", "rdx", "rbx", "rsp", "rbp", "rsi", "rdi", "r8", "r9", "r10", "r11",
+                             "r12", "r13", "r14", "r15" };
+#else
+const char* GPRTypeStr[] = { "eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi" };
+#endif
+
 /// Register identifier
 struct RegID
 {
@@ -240,6 +248,16 @@ struct RegID
 		return reg;
 	}
 };
+
+std::ostream& operator<<(std::ostream& ostr, RegID &rid){
+    ostr << std::noshowbase << std::dec;
+    if(rid.GetType() == R_TYPE_GP){
+        ostr << GPRTypeStr[rid.id];
+    }else{
+        ostr << RegTypeStr[rid.type] << rid.id;
+    }
+    return ostr;
+}
 
 /// Operand type
 enum OpdType
@@ -345,6 +363,19 @@ namespace detail
 		}
 		bool operator!=(const Opd& rhs) const {return !(*this == rhs);}
 	};
+
+    std::ostream& operator<<(std::ostream& ostr, Opd& opd){
+        ostr << std::showbase << std::hex;
+        if(opd.IsReg()){
+            ostr << "[Assignable=" << opd.reg_assignable_ << "]" << opd.reg_;
+        }else if(opd.IsMem()){
+            ostr << "[" << opd.base_ << "+" << opd.index_ << "*" << opd.scale_ << "+" << opd.disp_ << "]";
+        }else if(opd.IsImm()){
+            ostr << opd.imm_;
+        }
+        ostr << std::noshowbase << std::dec;
+        return ostr;
+    }
 
 #pragma pack(pop)
 
