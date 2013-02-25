@@ -1049,20 +1049,14 @@ struct Instr
 {
 	static const size_t MAX_OPERAND_COUNT = 6;
 
-    const char* name_;                      ///< Instr Name
 	InstrID	id_;							///< Instruction ID
 	uint32  opcode_;						///< Opcode
 	uint32  encoding_flag_;					///< EncodingFlags
 	detail::Opd	opd_[MAX_OPERAND_COUNT];	///< Operands
 
 	Instr(InstrID id, uint32 opcode, uint32 encoding_flag, const detail::Opd& opd1 = detail::Opd(), const detail::Opd& opd2 = detail::Opd(), const detail::Opd& opd3 = detail::Opd(), const detail::Opd& opd4 = detail::Opd(), const detail::Opd& opd5 = detail::Opd(), const detail::Opd& opd6 = detail::Opd())
-		: name_(""), id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;}
-
-    Instr(const char* name, InstrID id, uint32 opcode, uint32 encoding_flag, const detail::Opd& opd1 = detail::Opd(), const detail::Opd& opd2 = detail::Opd(), const detail::Opd& opd3 = detail::Opd(), const detail::Opd& opd4 = detail::Opd(), const detail::Opd& opd5 = detail::Opd(), const detail::Opd& opd6 = detail::Opd())
-		: name_(name), id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;} 
-
+		: id_(id), opcode_(opcode), encoding_flag_(encoding_flag) {opd_[0] = opd1, opd_[1] = opd2, opd_[2] = opd3, opd_[3] = opd4, opd_[4] = opd5, opd_[5] = opd6;}
 	InstrID GetID() const {return id_;}
-    const char* GetName() const {return name_;}
 	const detail::Opd& GetOpd(size_t index) const {return opd_[index];}
 	detail::Opd& GetOpd(size_t index) {return opd_[index];}
 };
@@ -1070,8 +1064,10 @@ struct Instr
 std::ostream& operator<<(std::ostream& ostr, Instr& i){
     ostr << std::hex << std::showbase;
 
+    const char* name = "";
+
     ostr << "[opcode:" << std::setw(8) << i.opcode_
-         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << i.GetName() << " ";
+         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << name << " ";
 
     if(!i.GetOpd(0).IsNone()) { ostr << " " << i.GetOpd(0); }
     if(!i.GetOpd(1).IsNone()) { ostr << "," << i.GetOpd(1); }
