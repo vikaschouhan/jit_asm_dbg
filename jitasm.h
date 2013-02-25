@@ -1919,11 +1919,6 @@ struct Frontend
 		instrs_.push_back(Instr(id, opcode, encoding_flag, opd1, opd2, opd3, opd4, opd5, opd6));
 	}
 
-    void AppendInstr(const char* name, InstrID id, uint32 opcode, uint32 encoding_flag, const detail::Opd& opd1 = detail::Opd(), const detail::Opd& opd2 = detail::Opd(), const detail::Opd& opd3 = detail::Opd(), const detail::Opd& opd4 = detail::Opd(), const detail::Opd& opd5 = detail::Opd(), const detail::Opd& opd6 = detail::Opd())
-	{
-		instrs_.push_back(Instr(name, id, opcode, encoding_flag, opd1, opd2, opd3, opd4, opd5, opd6));
-	}
-
 	void AppendJmp(size_t label_id)
 	{
 		AppendInstr(I_JMP, 0, E_SPECIAL, Imm64(label_id));
@@ -1970,147 +1965,147 @@ struct Frontend
 	}
 
 	// General-Purpose Instructions
-	void adc(const Reg8& dst, const Imm8& imm)		{AppendInstr("adc", I_ADC, 0x80, E_SPECIAL, Imm8(2), RW(dst), imm);}
-	void adc(const Mem8& dst, const Imm8& imm)		{AppendInstr("adc", I_ADC, 0x80, 0, Imm8(2), RW(dst), imm);}
-	void adc(const Reg16& dst, const Imm16& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Mem16& dst, const Imm16& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Reg32& dst, const Imm32& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Mem32& dst, const Imm32& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Reg8& dst, const Reg8& src)		{AppendInstr("adc", I_ADC, 0x10, 0, R(src), RW(dst));}
-	void adc(const Mem8& dst, const Reg8& src)		{AppendInstr("adc", I_ADC, 0x10, 0, R(src), RW(dst));}
-	void adc(const Reg8& dst, const Mem8& src)		{AppendInstr("adc", I_ADC, 0x12, 0, RW(dst), R(src));}
-	void adc(const Reg16& dst, const Reg16& src)	{AppendInstr("adc", I_ADC, 0x11, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void adc(const Mem16& dst, const Reg16& src)	{AppendInstr("adc", I_ADC, 0x11, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void adc(const Reg16& dst, const Mem16& src)	{AppendInstr("adc", I_ADC, 0x13, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
-	void adc(const Reg32& dst, const Reg32& src)	{AppendInstr("adc", I_ADC, 0x11, 0, R(src), RW(dst));}
-	void adc(const Mem32& dst, const Reg32& src)	{AppendInstr("adc", I_ADC, 0x11, 0, R(src), RW(dst));}
-	void adc(const Reg32& dst, const Mem32& src)	{AppendInstr("adc", I_ADC, 0x13, 0, RW(dst), R(src));}
+	void adc(const Reg8& dst, const Imm8& imm)		{AppendInstr(I_ADC, 0x80, E_SPECIAL, Imm8(2), RW(dst), imm);}
+	void adc(const Mem8& dst, const Imm8& imm)		{AppendInstr(I_ADC, 0x80, 0, Imm8(2), RW(dst), imm);}
+	void adc(const Reg16& dst, const Imm16& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Mem16& dst, const Imm16& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Reg32& dst, const Imm32& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Mem32& dst, const Imm32& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Reg8& dst, const Reg8& src)		{AppendInstr(I_ADC, 0x10, 0, R(src), RW(dst));}
+	void adc(const Mem8& dst, const Reg8& src)		{AppendInstr(I_ADC, 0x10, 0, R(src), RW(dst));}
+	void adc(const Reg8& dst, const Mem8& src)		{AppendInstr(I_ADC, 0x12, 0, RW(dst), R(src));}
+	void adc(const Reg16& dst, const Reg16& src)	{AppendInstr(I_ADC, 0x11, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void adc(const Mem16& dst, const Reg16& src)	{AppendInstr(I_ADC, 0x11, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void adc(const Reg16& dst, const Mem16& src)	{AppendInstr(I_ADC, 0x13, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
+	void adc(const Reg32& dst, const Reg32& src)	{AppendInstr(I_ADC, 0x11, 0, R(src), RW(dst));}
+	void adc(const Mem32& dst, const Reg32& src)	{AppendInstr(I_ADC, 0x11, 0, R(src), RW(dst));}
+	void adc(const Reg32& dst, const Mem32& src)	{AppendInstr(I_ADC, 0x13, 0, RW(dst), R(src));}
 #ifdef JITASM64
-	void adc(const Reg64& dst, const Imm32& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Mem64& dst, const Imm32& imm)	{AppendInstr("adc", I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(2), RW(dst), detail::ImmXor8(imm));}
-	void adc(const Reg64& dst, const Reg64& src)	{AppendInstr("adc", I_ADC, 0x11, E_REXW_PREFIX, R(src), RW(dst));}
-	void adc(const Mem64& dst, const Reg64& src)	{AppendInstr("adc", I_ADC, 0x11, E_REXW_PREFIX, R(src), RW(dst));}
-	void adc(const Reg64& dst, const Mem64& src)	{AppendInstr("adc", I_ADC, 0x13, E_REXW_PREFIX, RW(dst), R(src));}
+	void adc(const Reg64& dst, const Imm32& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Mem64& dst, const Imm32& imm)	{AppendInstr(I_ADC, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(2), RW(dst), detail::ImmXor8(imm));}
+	void adc(const Reg64& dst, const Reg64& src)	{AppendInstr(I_ADC, 0x11, E_REXW_PREFIX, R(src), RW(dst));}
+	void adc(const Mem64& dst, const Reg64& src)	{AppendInstr(I_ADC, 0x11, E_REXW_PREFIX, R(src), RW(dst));}
+	void adc(const Reg64& dst, const Mem64& src)	{AppendInstr(I_ADC, 0x13, E_REXW_PREFIX, RW(dst), R(src));}
 #endif
-	void add(const Reg8& dst, const Imm8& imm)		{AppendInstr("add", I_ADD, 0x80, E_SPECIAL, Imm8(0), RW(dst), imm);}
-	void add(const Mem8& dst, const Imm8& imm)		{AppendInstr("add", I_ADD, 0x80, 0, Imm8(0), RW(dst), imm);}
-	void add(const Reg16& dst, const Imm16& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Mem16& dst, const Imm16& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Reg32& dst, const Imm32& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Mem32& dst, const Imm32& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Reg8& dst, const Reg8& src)		{AppendInstr("add", I_ADD, 0x00, 0, R(src), RW(dst));}
-	void add(const Mem8& dst, const Reg8& src)		{AppendInstr("add", I_ADD, 0x00, 0, R(src), RW(dst));}
-	void add(const Reg8& dst, const Mem8& src)		{AppendInstr("add", I_ADD, 0x02, 0, RW(dst), R(src));}
-	void add(const Reg16& dst, const Reg16& src)	{AppendInstr("add", I_ADD, 0x01, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void add(const Mem16& dst, const Reg16& src)	{AppendInstr("add", I_ADD, 0x01, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void add(const Reg16& dst, const Mem16& src)	{AppendInstr("add", I_ADD, 0x03, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
-	void add(const Reg32& dst, const Reg32& src)	{AppendInstr("add", I_ADD, 0x01, 0, R(src), RW(dst));}
-	void add(const Mem32& dst, const Reg32& src)	{AppendInstr("add", I_ADD, 0x01, 0, R(src), RW(dst));}
-	void add(const Reg32& dst, const Mem32& src)	{AppendInstr("add", I_ADD, 0x03, 0, RW(dst), R(src));}
+	void add(const Reg8& dst, const Imm8& imm)		{AppendInstr(I_ADD, 0x80, E_SPECIAL, Imm8(0), RW(dst), imm);}
+	void add(const Mem8& dst, const Imm8& imm)		{AppendInstr(I_ADD, 0x80, 0, Imm8(0), RW(dst), imm);}
+	void add(const Reg16& dst, const Imm16& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Mem16& dst, const Imm16& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Reg32& dst, const Imm32& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Mem32& dst, const Imm32& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Reg8& dst, const Reg8& src)		{AppendInstr(I_ADD, 0x00, 0, R(src), RW(dst));}
+	void add(const Mem8& dst, const Reg8& src)		{AppendInstr(I_ADD, 0x00, 0, R(src), RW(dst));}
+	void add(const Reg8& dst, const Mem8& src)		{AppendInstr(I_ADD, 0x02, 0, RW(dst), R(src));}
+	void add(const Reg16& dst, const Reg16& src)	{AppendInstr(I_ADD, 0x01, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void add(const Mem16& dst, const Reg16& src)	{AppendInstr(I_ADD, 0x01, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void add(const Reg16& dst, const Mem16& src)	{AppendInstr(I_ADD, 0x03, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
+	void add(const Reg32& dst, const Reg32& src)	{AppendInstr(I_ADD, 0x01, 0, R(src), RW(dst));}
+	void add(const Mem32& dst, const Reg32& src)	{AppendInstr(I_ADD, 0x01, 0, R(src), RW(dst));}
+	void add(const Reg32& dst, const Mem32& src)	{AppendInstr(I_ADD, 0x03, 0, RW(dst), R(src));}
 #ifdef JITASM64
-	void add(const Reg64& dst, const Imm32& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Mem64& dst, const Imm32& imm)	{AppendInstr("add", I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(0), RW(dst), detail::ImmXor8(imm));}
-	void add(const Reg64& dst, const Reg64& src)	{AppendInstr("add", I_ADD, 0x01, E_REXW_PREFIX, R(src), RW(dst));}
-	void add(const Mem64& dst, const Reg64& src)	{AppendInstr("add", I_ADD, 0x01, E_REXW_PREFIX, R(src), RW(dst));}
-	void add(const Reg64& dst, const Mem64& src)	{AppendInstr("add", I_ADD, 0x03, E_REXW_PREFIX, RW(dst), R(src));}
+	void add(const Reg64& dst, const Imm32& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Mem64& dst, const Imm32& imm)	{AppendInstr(I_ADD, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(0), RW(dst), detail::ImmXor8(imm));}
+	void add(const Reg64& dst, const Reg64& src)	{AppendInstr(I_ADD, 0x01, E_REXW_PREFIX, R(src), RW(dst));}
+	void add(const Mem64& dst, const Reg64& src)	{AppendInstr(I_ADD, 0x01, E_REXW_PREFIX, R(src), RW(dst));}
+	void add(const Reg64& dst, const Mem64& src)	{AppendInstr(I_ADD, 0x03, E_REXW_PREFIX, RW(dst), R(src));}
 #endif
-	void and(const Reg8& dst, const Imm8& imm)		{AppendInstr("and", I_AND, 0x80, E_SPECIAL, Imm8(4), RW(dst), imm);}
-	void and(const Mem8& dst, const Imm8& imm)		{AppendInstr("and", I_AND, 0x80, 0, Imm8(4), RW(dst), imm);}
-	void and(const Reg16& dst, const Imm16& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Mem16& dst, const Imm16& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Reg32& dst, const Imm32& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Mem32& dst, const Imm32& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Reg8& dst, const Reg8& src)		{AppendInstr("and", I_AND, 0x20, 0, R(src), RW(dst));}
-	void and(const Mem8& dst, const Reg8& src)		{AppendInstr("and", I_AND, 0x20, 0, R(src), RW(dst));}
-	void and(const Reg8& dst, const Mem8& src)		{AppendInstr("and", I_AND, 0x22, 0, RW(dst), R(src));}
-	void and(const Reg16& dst, const Reg16& src)	{AppendInstr("and", I_AND, 0x21, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void and(const Mem16& dst, const Reg16& src)	{AppendInstr("and", I_AND, 0x21, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
-	void and(const Reg16& dst, const Mem16& src)	{AppendInstr("and", I_AND, 0x23, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
-	void and(const Reg32& dst, const Reg32& src)	{AppendInstr("and", I_AND, 0x21, 0, R(src), RW(dst));}
-	void and(const Mem32& dst, const Reg32& src)	{AppendInstr("and", I_AND, 0x21, 0, R(src), RW(dst));}
-	void and(const Reg32& dst, const Mem32& src)	{AppendInstr("and", I_AND, 0x23, 0, RW(dst), R(src));}
+	void and(const Reg8& dst, const Imm8& imm)		{AppendInstr(I_AND, 0x80, E_SPECIAL, Imm8(4), RW(dst), imm);}
+	void and(const Mem8& dst, const Imm8& imm)		{AppendInstr(I_AND, 0x80, 0, Imm8(4), RW(dst), imm);}
+	void and(const Reg16& dst, const Imm16& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX | E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Mem16& dst, const Imm16& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_OPERAND_SIZE_PREFIX, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Reg32& dst, const Imm32& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Mem32& dst, const Imm32& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, 0, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Reg8& dst, const Reg8& src)		{AppendInstr(I_AND, 0x20, 0, R(src), RW(dst));}
+	void and(const Mem8& dst, const Reg8& src)		{AppendInstr(I_AND, 0x20, 0, R(src), RW(dst));}
+	void and(const Reg8& dst, const Mem8& src)		{AppendInstr(I_AND, 0x22, 0, RW(dst), R(src));}
+	void and(const Reg16& dst, const Reg16& src)	{AppendInstr(I_AND, 0x21, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void and(const Mem16& dst, const Reg16& src)	{AppendInstr(I_AND, 0x21, E_OPERAND_SIZE_PREFIX, R(src), RW(dst));}
+	void and(const Reg16& dst, const Mem16& src)	{AppendInstr(I_AND, 0x23, E_OPERAND_SIZE_PREFIX, RW(dst), R(src));}
+	void and(const Reg32& dst, const Reg32& src)	{AppendInstr(I_AND, 0x21, 0, R(src), RW(dst));}
+	void and(const Mem32& dst, const Reg32& src)	{AppendInstr(I_AND, 0x21, 0, R(src), RW(dst));}
+	void and(const Reg32& dst, const Mem32& src)	{AppendInstr(I_AND, 0x23, 0, RW(dst), R(src));}
 #ifdef JITASM64
-	void and(const Reg64& dst, const Imm32& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Mem64& dst, const Imm32& imm)	{AppendInstr("and", I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(4), RW(dst), detail::ImmXor8(imm));}
-	void and(const Reg64& dst, const Reg64& src)	{AppendInstr("and", I_AND, 0x21, E_REXW_PREFIX, R(src), RW(dst));}
-	void and(const Mem64& dst, const Reg64& src)	{AppendInstr("and", I_AND, 0x21, E_REXW_PREFIX, R(src), RW(dst));}
-	void and(const Reg64& dst, const Mem64& src)	{AppendInstr("and", I_AND, 0x23, E_REXW_PREFIX, RW(dst), R(src));}
+	void and(const Reg64& dst, const Imm32& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX | E_SPECIAL, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Mem64& dst, const Imm32& imm)	{AppendInstr(I_AND, detail::IsInt8(imm.GetImm()) ? 0x83 : 0x81, E_REXW_PREFIX, Imm8(4), RW(dst), detail::ImmXor8(imm));}
+	void and(const Reg64& dst, const Reg64& src)	{AppendInstr(I_AND, 0x21, E_REXW_PREFIX, R(src), RW(dst));}
+	void and(const Mem64& dst, const Reg64& src)	{AppendInstr(I_AND, 0x21, E_REXW_PREFIX, R(src), RW(dst));}
+	void and(const Reg64& dst, const Mem64& src)	{AppendInstr(I_AND, 0x23, E_REXW_PREFIX, RW(dst), R(src));}
 #endif
-	void bsf(const Reg16& dst, const Reg16& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
-	void bsf(const Reg16& dst, const Mem16& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
-	void bsf(const Reg32& dst, const Reg32& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, 0, W(dst), R(src));}
-	void bsf(const Reg32& dst, const Mem32& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, 0, W(dst), R(src));}
+	void bsf(const Reg16& dst, const Reg16& src)	{AppendInstr(I_BSF, 0x0FBC, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
+	void bsf(const Reg16& dst, const Mem16& src)	{AppendInstr(I_BSF, 0x0FBC, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
+	void bsf(const Reg32& dst, const Reg32& src)	{AppendInstr(I_BSF, 0x0FBC, 0, W(dst), R(src));}
+	void bsf(const Reg32& dst, const Mem32& src)	{AppendInstr(I_BSF, 0x0FBC, 0, W(dst), R(src));}
 #ifdef JITASM64
-	void bsf(const Reg64& dst, const Reg64& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, E_REXW_PREFIX, W(dst), R(src));}
-	void bsf(const Reg64& dst, const Mem64& src)	{AppendInstr("bsf", I_BSF, 0x0FBC, E_REXW_PREFIX, W(dst), R(src));}
+	void bsf(const Reg64& dst, const Reg64& src)	{AppendInstr(I_BSF, 0x0FBC, E_REXW_PREFIX, W(dst), R(src));}
+	void bsf(const Reg64& dst, const Mem64& src)	{AppendInstr(I_BSF, 0x0FBC, E_REXW_PREFIX, W(dst), R(src));}
 #endif
-	void bsr(const Reg16& dst, const Reg16& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
-	void bsr(const Reg16& dst, const Mem16& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
-	void bsr(const Reg32& dst, const Reg32& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, 0, W(dst), R(src));}
-	void bsr(const Reg32& dst, const Mem32& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, 0, W(dst), R(src));}
+	void bsr(const Reg16& dst, const Reg16& src)	{AppendInstr(I_BSR, 0x0FBD, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
+	void bsr(const Reg16& dst, const Mem16& src)	{AppendInstr(I_BSR, 0x0FBD, E_OPERAND_SIZE_PREFIX, W(dst), R(src));}
+	void bsr(const Reg32& dst, const Reg32& src)	{AppendInstr(I_BSR, 0x0FBD, 0, W(dst), R(src));}
+	void bsr(const Reg32& dst, const Mem32& src)	{AppendInstr(I_BSR, 0x0FBD, 0, W(dst), R(src));}
 #ifdef JITASM64
-	void bsr(const Reg64& dst, const Reg64& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, E_REXW_PREFIX, W(dst), R(src));}
-	void bsr(const Reg64& dst, const Mem64& src)	{AppendInstr("bsr", I_BSR, 0x0FBD, E_REXW_PREFIX, W(dst), R(src));}
+	void bsr(const Reg64& dst, const Reg64& src)	{AppendInstr(I_BSR, 0x0FBD, E_REXW_PREFIX, W(dst), R(src));}
+	void bsr(const Reg64& dst, const Mem64& src)	{AppendInstr(I_BSR, 0x0FBD, E_REXW_PREFIX, W(dst), R(src));}
 #endif
-	void bswap(const Reg32& dst)	{AppendInstr("bswap", I_BSWAP, 0x0FC8, 0, RW(dst));}
+	void bswap(const Reg32& dst)	{AppendInstr(I_BSWAP, 0x0FC8, 0, RW(dst));}
 #ifdef JITASM64
-	void bswap(const Reg64& dst)	{AppendInstr("bswap", I_BSWAP, 0x0FC8, E_REXW_PREFIX, RW(dst));}
+	void bswap(const Reg64& dst)	{AppendInstr(I_BSWAP, 0x0FC8, E_REXW_PREFIX, RW(dst));}
 #endif
-	void bt(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, E_OPERAND_SIZE_PREFIX, R(bitoffset), R(bitbase));}
-	void bt(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, E_OPERAND_SIZE_PREFIX, R(bitoffset), R(bitbase));}
-	void bt(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, 0, R(bitoffset), R(bitbase));}
-	void bt(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, 0, R(bitoffset), R(bitbase));}
-	void bt(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(4), R(bitbase), bitoffset);}
-	void bt(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(4), R(bitbase), bitoffset);}
-	void bt(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, 0, Imm8(4), R(bitbase), bitoffset);}
-	void bt(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, 0, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BT, 0x0FA3, E_OPERAND_SIZE_PREFIX, R(bitoffset), R(bitbase));}
+	void bt(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BT, 0x0FA3, E_OPERAND_SIZE_PREFIX, R(bitoffset), R(bitbase));}
+	void bt(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BT, 0x0FA3, 0, R(bitoffset), R(bitbase));}
+	void bt(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BT, 0x0FA3, 0, R(bitoffset), R(bitbase));}
+	void bt(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, 0, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, 0, Imm8(4), R(bitbase), bitoffset);}
 #ifdef JITASM64
-	void bt(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, E_REXW_PREFIX, R(bitoffset), R(bitbase));}
-	void bt(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr("bt", I_BT, 0x0FA3, E_REXW_PREFIX, R(bitoffset), R(bitbase));}
-	void bt(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, E_REXW_PREFIX, Imm8(4), R(bitbase), bitoffset);}
-	void bt(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr("bt", I_BT, 0x0FBA, E_REXW_PREFIX, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BT, 0x0FA3, E_REXW_PREFIX, R(bitoffset), R(bitbase));}
+	void bt(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BT, 0x0FA3, E_REXW_PREFIX, R(bitoffset), R(bitbase));}
+	void bt(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, E_REXW_PREFIX, Imm8(4), R(bitbase), bitoffset);}
+	void bt(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BT, 0x0FBA, E_REXW_PREFIX, Imm8(4), R(bitbase), bitoffset);}
 #endif
-	void btc(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void btc(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void btc(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, 0, R(bitoffset), RW(bitbase));}
-	void btc(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, 0, R(bitoffset), RW(bitbase));}
-	void btc(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
-	void btc(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
-	void btc(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, 0, Imm8(7), RW(bitbase), bitoffset);}
-	void btc(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, 0, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void btc(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void btc(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, 0, R(bitoffset), RW(bitbase));}
+	void btc(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, 0, R(bitoffset), RW(bitbase));}
+	void btc(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, 0, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, 0, Imm8(7), RW(bitbase), bitoffset);}
 #ifdef JITASM64
-	void btc(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void btc(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void btc(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, E_REXW_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
-	void btc(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr("btc", I_BTC, 0x0FBA, E_REXW_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void btc(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTC, 0x0FBB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void btc(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, E_REXW_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
+	void btc(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTC, 0x0FBA, E_REXW_PREFIX, Imm8(7), RW(bitbase), bitoffset);}
 #endif
-	void btr(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void btr(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void btr(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, 0, R(bitoffset), RW(bitbase));}
-	void btr(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, 0, R(bitoffset), RW(bitbase));}
-	void btr(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
-	void btr(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
-	void btr(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, 0, Imm8(6), RW(bitbase), bitoffset);}
-	void btr(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, 0, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void btr(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void btr(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, 0, R(bitoffset), RW(bitbase));}
+	void btr(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, 0, R(bitoffset), RW(bitbase));}
+	void btr(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, 0, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, 0, Imm8(6), RW(bitbase), bitoffset);}
 #ifdef JITASM64
-	void btr(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void btr(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FB3, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void btr(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, E_REXW_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
-	void btr(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr("btr", I_BTR, 0x0FBA, E_REXW_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void btr(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTR, 0x0FB3, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void btr(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, E_REXW_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
+	void btr(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTR, 0x0FBA, E_REXW_PREFIX, Imm8(6), RW(bitbase), bitoffset);}
 #endif
-	void bts(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void bts(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
-	void bts(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, 0, R(bitoffset), RW(bitbase));}
-	void bts(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, 0, R(bitoffset), RW(bitbase));}
-	void bts(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
-	void bts(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
-	void bts(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, 0, Imm8(5), RW(bitbase), bitoffset);}
-	void bts(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, 0, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Reg16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void bts(const Mem16& bitbase, const Reg16& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, E_OPERAND_SIZE_PREFIX, R(bitoffset), RW(bitbase));}
+	void bts(const Reg32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, 0, R(bitoffset), RW(bitbase));}
+	void bts(const Mem32& bitbase, const Reg32& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, 0, R(bitoffset), RW(bitbase));}
+	void bts(const Reg16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Mem16& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, E_OPERAND_SIZE_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Reg32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, 0, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Mem32& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, 0, Imm8(5), RW(bitbase), bitoffset);}
 #ifdef JITASM64
-	void bts(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void bts(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FAB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
-	void bts(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, E_REXW_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
-	void bts(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr("bts", I_BTS, 0x0FBA, E_REXW_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Reg64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void bts(const Mem64& bitbase, const Reg64& bitoffset)	{AppendInstr(I_BTS, 0x0FAB, E_REXW_PREFIX, R(bitoffset), RW(bitbase));}
+	void bts(const Reg64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, E_REXW_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
+	void bts(const Mem64& bitbase, const Imm8& bitoffset)	{AppendInstr(I_BTS, 0x0FBA, E_REXW_PREFIX, Imm8(5), RW(bitbase), bitoffset);}
 #endif
 #ifndef JITASM64
 	void call(const Reg16& dst)	{AppendInstr(I_CALL, 0xFF, E_OPERAND_SIZE_PREFIX, Imm8(2), R(dst));}
