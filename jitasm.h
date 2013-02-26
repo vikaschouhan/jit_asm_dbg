@@ -1215,17 +1215,37 @@ struct Instr
 std::ostream& operator<<(std::ostream& ostr, Instr& i){
     ostr << std::hex << std::showbase;
 
-    const char* name = InstrIDStr[i.id_];
+    const char* name   = InstrIDStr[i.id_];
+    uint32      iflag  = i.encoding_flag_;
+    std::string prefix = "[";
+
+    // Derive prefixes.
+	if(iflag & E_OPERAND_SIZE_PREFIX)  { prefix += "-OPERAND_SIZE";  }
+	if(iflag & E_REP_PREFIX)           { prefix += "-REP";           }
+	if(iflag & E_REXW_PREFIX)          { prefix += "-REXW";          }
+	if(iflag & E_MANDATORY_PREFIX_66)  { prefix += "-MAND_66";       }
+	if(iflag & E_MANDATORY_PREFIX_F2)  { prefix += "-MAND_F2";       }
+	if(iflag & E_MANDATORY_PREFIX_F3)  { prefix += "-MAND_F3";       }
+	if(iflag & E_VEX)                  { prefix += "-VEX";           }
+	if(iflag & E_XOP)                  { prefix += "-XOP";           }
+	if(iflag & E_VEX_L)                { prefix += "-VEX_L";         }
+	if(iflag & E_VEX_W)                { prefix += "-VEX_W";         }
+
+    prefix += "-]";
 
     ostr << "[opcode:" << std::setw(8) << i.opcode_
          << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << name << " ";
 
+    // Dump Arguments
     if(!i.GetOpd(0).IsNone()) { ostr << " " << i.GetOpd(0); }
     if(!i.GetOpd(1).IsNone()) { ostr << "," << i.GetOpd(1); }
     if(!i.GetOpd(2).IsNone()) { ostr << "," << i.GetOpd(2); }
     if(!i.GetOpd(3).IsNone()) { ostr << "," << i.GetOpd(3); }
     if(!i.GetOpd(4).IsNone()) { ostr << "," << i.GetOpd(4); }
     if(!i.GetOpd(5).IsNone()) { ostr << "," << i.GetOpd(5); }
+
+    // Dump prefixes
+    if(prefix != "[-]") { ostr << " " << prefix; }
 
     ostr << std::dec << std::noshowbase;
     return ostr;
