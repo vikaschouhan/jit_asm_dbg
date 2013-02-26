@@ -379,6 +379,9 @@ namespace detail
     std::ostream& operator<<(std::ostream& ostr, Opd& opd){
         ostr << std::showbase << std::hex;
 
+        if(opd.IsDummy()){
+            goto exit_0;
+        }
         if(opd.IsReg()){
             //ostr << "[Assignable=" << opd.reg_assignable_ << "]" << opd.reg_;
             ostr << opd.reg_;
@@ -392,6 +395,7 @@ namespace detail
             ostr << opd.imm_;
         }
 
+        exit_0:
         ostr << std::noshowbase << std::dec;
         return ostr;
     }
@@ -1218,6 +1222,8 @@ std::ostream& operator<<(std::ostream& ostr, Instr& i){
     const char* name   = InstrIDStr[i.id_];
     uint32      iflag  = i.encoding_flag_;
     std::string prefix = "[";
+    bool special       = (iflag & E_SPECIAL) ? true:false;
+    bool d_op0         = false;
 
     // Derive prefixes.
 	if(iflag & E_OPERAND_SIZE_PREFIX)  { prefix += "-OPERAND_SIZE";  }
@@ -1234,15 +1240,24 @@ std::ostream& operator<<(std::ostream& ostr, Instr& i){
     prefix += "-]";
 
     ostr << "[opcode:" << std::setw(8) << i.opcode_
-         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << name << " ";
+         << "|encoding_flag:" << std::setw(8) << i.encoding_flag_ << "] " << std::setw(10) << name << "  ";
 
     // Dump Arguments
-    if(!i.GetOpd(0).IsNone()) { ostr << " " << i.GetOpd(0); }
-    if(!i.GetOpd(1).IsNone()) { ostr << "," << i.GetOpd(1); }
-    if(!i.GetOpd(2).IsNone()) { ostr << "," << i.GetOpd(2); }
-    if(!i.GetOpd(3).IsNone()) { ostr << "," << i.GetOpd(3); }
-    if(!i.GetOpd(4).IsNone()) { ostr << "," << i.GetOpd(4); }
-    if(!i.GetOpd(5).IsNone()) { ostr << "," << i.GetOpd(5); }
+    if(!i.GetOpd(0).IsNone() && !i.GetOpd(0).IsDummy()) {
+        // special instrs are usually encoded with an immediate Operand 0, that we don't need.
+        if(!(special && i.GetOpd(0).IsImm())){
+            ostr << i.GetOpd(0);
+            d_op0 = true;
+        }
+    }
+    if(!i.GetOpd(1).IsNone() && !i.GetOpd(1).IsDummy()) {
+        if(d_op0) { ostr << ","; }
+        ostr << i.GetOpd(1);
+    }
+    if(!i.GetOpd(2).IsNone() && !i.GetOpd(2).IsDummy()) { ostr << "," << i.GetOpd(2); }
+    if(!i.GetOpd(3).IsNone() && !i.GetOpd(3).IsDummy()) { ostr << "," << i.GetOpd(3); }
+    if(!i.GetOpd(4).IsNone() && !i.GetOpd(4).IsDummy()) { ostr << "," << i.GetOpd(4); }
+    if(!i.GetOpd(5).IsNone() && !i.GetOpd(5).IsDummy()) { ostr << "," << i.GetOpd(5); }
 
     // Dump prefixes
     if(prefix != "[-]") { ostr << " " << prefix; }
