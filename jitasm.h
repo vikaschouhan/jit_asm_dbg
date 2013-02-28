@@ -378,6 +378,7 @@ namespace detail
 
     std::ostream& operator<<(std::ostream& ostr, Opd& opd){
         ostr << std::showbase << std::hex;
+        const char *sign = (opd.disp_ > 0) ? "+":"";
 
         if(opd.IsDummy()){
             goto exit_0;
@@ -387,8 +388,8 @@ namespace detail
             ostr << opd.reg_;
         }else if(opd.IsMem()){
             ostr << "[";
-            if(!opd.base_.IsInvalid())   { ostr << opd.base_ << "+"; }
-            if(!opd.index_.IsInvalid())  { ostr << opd.index_ << "*" << opd.scale_ << "+"; }
+            if(!opd.base_.IsInvalid())   { ostr << opd.base_ << sign; }
+            if(!opd.index_.IsInvalid())  { ostr << opd.index_ << "*" << opd.scale_ << sign; }
             ostr << opd.disp_;
             ostr << "]";
         }else if(opd.IsImm()){
